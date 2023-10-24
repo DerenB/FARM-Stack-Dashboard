@@ -5,7 +5,7 @@ from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
 # Import Routes
-from routers import testRoute
+from routers import testRoute, todo_route
 
 # Origins for CORS
 origins = [
@@ -31,6 +31,7 @@ app = FastAPI(middleware=middleware)
 
 # Include the routes imported
 app.include_router(testRoute.router)
+app.include_router(todo_route.router)
 
 # Home Root
 @app.get("/")
