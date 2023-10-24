@@ -22,6 +22,12 @@ async def post_todo(todo:ToDo):
     raise HTTPException(400, "Something went wrong, bad request")
 
 # Read 1 ToDo
+@router.get("/todo{title}", tags=["todo"], response_model=ToDo)
+async def get_todo_by_title(title):
+    response = await read_one_todo(title)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no ToDo with this title: {title}")
 
 # Read All ToDos
 @router.get("/todo", tags=["todo"])
@@ -30,5 +36,17 @@ async def get_todo():
     return response
 
 # Update ToDo
+@router.put("/todo/{title}", tags=["todo"], response_model=ToDo)
+async def put_todo(title:str, desc:str):
+    response = await update_todo(title, desc)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no Todo item with this title {title}")
 
 # Delete ToDo
+@router.delete("/todo/{title}", tags=["todo"])
+async def delete_todo(title):
+    response = await remove_todo(title)
+    if response:
+        return "Successfully deleted ToDo"
+    raise HTTPException(404, f"There is no Todo item with this title {title}")
