@@ -39,7 +39,10 @@ async def read_all_todos():
 
 # Update a ToDo Item
 async def update_todo(title, desc):
-    await collection.update_one({"title":title}, {"$set": {"desc": desc}})
+    await collection.update_one(
+        {"title":title}, 
+        {"$set": {"desc": desc}}
+    )
     document = await collection.find_one({"title": title})
     return document
 

@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from starlette.middleware.cors import CORSMiddleware
 
 # Import Routes
-from routers import testRoute, todo_route
+from routers import testRoute, todo_route, calendar_route
 
 # Start App
 app = FastAPI()
@@ -21,6 +21,7 @@ app.add_middleware(
 # Include the routes imported
 app.include_router(testRoute.router)
 app.include_router(todo_route.router)
+app.include_router(calendar_route.router)
 
 # Home Root
 @app.get("/")
