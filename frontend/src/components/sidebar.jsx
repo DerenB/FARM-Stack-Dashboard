@@ -14,6 +14,11 @@ const sidebar = () => {
                 To-Do
             </NavLink>
         </div>
+        <div>
+            <NavLink to="/calendar">
+                Calendar
+            </NavLink>
+        </div>
     </div>
   )
 }
