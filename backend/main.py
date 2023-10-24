@@ -1,33 +1,22 @@
 from fastapi import Depends, FastAPI, HTTPException
 
 # Import Starlette for CORS
-from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
 # Import Routes
 from routers import testRoute, todo_route
 
-# Origins for CORS
-origins = [
-    'http://localhost:3000',
-    'https://localhost:3000',
-    'http://127.0.0.1:8000/',
-    'http://127.0.0.1:8080/',
-]
+# Start App
+app = FastAPI()
 
 # Create Middleware
-middleware = [
-    Middleware(
-        CORSMiddleware,
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-]
-
-# Start App
-app = FastAPI(middleware=middleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "https://localhost:5173", "http://127.0.0.1:8000/"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Include the routes imported
 app.include_router(testRoute.router)
