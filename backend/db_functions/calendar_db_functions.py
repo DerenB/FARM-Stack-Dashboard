@@ -4,10 +4,9 @@ import os
 
 # id: int
 # subject: str
-# location: str
+# category: str
 # starttime: str
 # endtime: str
-# categorycolor: str
 
 # Load Secret Items
 load_dotenv()
@@ -41,14 +40,13 @@ async def read_all_calendar_items():
     return calendar_items
 
 # Update a Calendar item
-async def update_calendar_item(id, subject, location, starttime, endtime, categorycolor):
+async def update_calendar_item(id, subject, category, starttime, endtime):
     await collection.update_one(
         {"id":id},
         {"set": {"subject": subject}},
-        {"set": {"location": location}},
+        {"set": {"location": category}},
         {"set": {"starttime": starttime}},
-        {"set": {"endtime": endtime}},
-        {"set": {"categorycolor": categorycolor}}
+        {"set": {"endtime": endtime}}
     )
     document = await collection.find_one({"id": id})
     return document

@@ -37,8 +37,8 @@ async def get_calendar_item():
 
 # Update ToDo
 @router.put("/calendar/{id}", tags=["calendar"], response_model=CalendarItem)
-async def put_calendar_item(id:int, subject:str, location:str, starttime:str, endtime:str, categorycolor:str):
-    response = await update_calendar_item(id, subject, location, starttime, endtime, categorycolor)
+async def put_calendar_item(id:int, subject:str, category:str, starttime:str, endtime:str):
+    response = await update_calendar_item(id, subject, category, starttime, endtime)
     if response:
         return response
     raise HTTPException(404, f"There is no Calendar Item with this id: {id}")
