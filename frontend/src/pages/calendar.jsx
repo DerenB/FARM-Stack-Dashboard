@@ -1,38 +1,35 @@
-import React, { useState } from 'react';
-import Calendar from 'react-calendar';
-import "react-calendar/dist/Calendar.css";
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import "react-big-calendar/lib/css/react-big-calendar.css";
+
+const localizer = momentLocalizer(moment);
 
 const calendar = () => {
-  const [date, changeDate] = useState(new Date());
 
-  function changeValue(val) {
-    changeDate(val);
- }
-
-  const test_date = [
+  const events = [
     {
-      "id": 2,
-      "subject": "Test Subject",
-      "location": "Test Location",
-      "starttime": "2023-11-24T12:00:00.000Z",
-      "endtime": "2023-11-24T16:00:00.000Z",
-      "categorycolor": "#0000ff"
+      start:moment('2023-10-24T10:00:00').toDate(),
+      end:moment('2023-10-24T12:00:00').toDate(),
+      title:"Test Event"
     },
     {
-      "id": 1,
-      "subject": "Test Subject",
-      "location": "Test Location",
-      "starttime": "2023-11-24T12:00:00.000Z",
-      "endtime": "2023-11-24T16:00:00.000Z",
-      "categorycolor": "#0000ff"
-  }
+      start:moment('2023-10-24T11:00:00').toDate(),
+      end:moment('2023-10-24T13:00:00').toDate(),
+      title:"Event 2"
+    },
   ]
 
   return (
-    <div>
-      <Calendar onChange={changeValue} value={date} />
+    <div className='flex h-screen bg-sky-500 p-10 border-black' style={{ }}>
+      <Calendar 
+        className='h-full w-full m-auto bg-red-300 border-black'
+        localizer={localizer}
+        events={events}
+        startAccessor="start"
+        endAccessor="end"
+      />
     </div>
   )
 }
 
-export default calendar
+export default calendar;
