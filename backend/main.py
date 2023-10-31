@@ -12,7 +12,7 @@ app = FastAPI()
 # Create Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://localhost:5173", "http://127.0.0.1:8000/"],
+    allow_origins=["http://localhost:5173", "https://localhost:5173", "http://127.0.0.1:8000/", "https://farm-stack-dashboard.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
