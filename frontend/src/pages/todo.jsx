@@ -7,7 +7,7 @@ function todo() {
   const [desc, setDesc] = useState();
 
   const addTodoHandler = () => {
-    axios.post('http://127.0.0.1:8000/todo', {
+    axios.post('https://grim-corpse-10162-99b7a1fba23f.herokuapp.com/todo', {
       'title': title,
       'desc': desc
     })
