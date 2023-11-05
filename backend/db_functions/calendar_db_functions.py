@@ -2,11 +2,11 @@ from models.calendar_model import CalendarItem
 from dotenv import load_dotenv
 import os
 
-# id: int
-# subject: str
-# category: str
-# starttime: str
-# endtime: str
+# title: str
+# start: str
+# end: str
+# allDay: bool
+# resource: str
 
 # Load Secret Items
 load_dotenv()
@@ -27,8 +27,8 @@ async def create_calendar_item(item):
     return document
 
 # Read 1 Calendar item
-async def read_one_calendar_item(id):
-    document = await collection.find_one({"id":id})
+async def read_one_calendar_item(title):
+    document = await collection.find_one({"title":title})
     return document
 
 # Read All Calendar items
@@ -40,18 +40,18 @@ async def read_all_calendar_items():
     return calendar_items
 
 # Update a Calendar item
-async def update_calendar_item(id, subject, category, starttime, endtime):
+async def update_calendar_item(title, start, end, allDay, resource):
     await collection.update_one(
-        {"id":id},
-        {"set": {"subject": subject}},
-        {"set": {"location": category}},
-        {"set": {"starttime": starttime}},
-        {"set": {"endtime": endtime}}
+        {"title":title},
+        {"set": {"start": start}},
+        {"set": {"end": end}},
+        {"set": {"allDay": allDay}},
+        {"set": {"resource": resource}}
     )
-    document = await collection.find_one({"id": id})
+    document = await collection.find_one({"title": title})
     return document
 
 # Delete a Calendar item
-async def remove_calendar_item(id):
-    await collection.delete_one({"id": id})
+async def remove_calendar_item(title):
+    await collection.delete_one({"title": title})
     return True

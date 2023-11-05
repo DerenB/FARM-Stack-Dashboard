@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
+import axios from 'axios';
 // Import Big Calendar and Moment
 
 // Create Localizer
@@ -13,26 +14,27 @@ const CalendarApp = (props) => {
 
     const handleSchoolChange = () => {
         setSchoolChecked(!schoolChecked);
-        for (let eventItem in events) {
-            console.log(eventItem[4]);
-            if (eventItem.resource === "school" && schoolChecked) {
-                console.log("Item:" + eventItem)
-                addEvents(eventItem)
-            }
-        }
     };
 
     const handleWorkChange = () => {
         setWorkChecked(!workChecked);
     };
 
-    const [eventsToRender, setEventsToRender] = useState([])
+    const [dataList, setDataList] = useState([])
+    useEffect(() => {
+        axios.get('http://127.0.0.1:8000/calendar')
+        .then(res => {
+            setDataList(res.data)
+        })
+    }, []);
+
+    console.log(dataList);
 
     const events = [
         {
             title: "Test Event",
-            start:moment('2023-11-03T10:00:00').toDate(),
-            end:moment('2023-11-03T12:00:00').toDate(),
+            start:"2023-11-03T10:00:00.000Z",
+            end:"2023-11-03T12:00:00.000Z",
             allDay: false,
             resource: "school"
         },
@@ -44,13 +46,6 @@ const CalendarApp = (props) => {
             resource: "work"
         },
     ]
-
-    const addEvents = (item) => {
-        eventsToRender.push(item)
-        setEventsToRender(eventsToRender)
-    }
-
-    console.log(eventsToRender);
 
     return (
         <div>
@@ -65,7 +60,7 @@ const CalendarApp = (props) => {
             </div>
             <Calendar 
                 localizer={localizer}
-                events={eventsToRender}
+                events={dataList}
                 startAccessor="start"
                 endAccessor="end"
                 style={{ height: 700 }}

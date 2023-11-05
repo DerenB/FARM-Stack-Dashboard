@@ -22,12 +22,12 @@ async def post_calendar_item(calendar_item:CalendarItem):
     raise HTTPException(400, "Something went wrong, bad request") 
 
 # Read 1 ToDo
-@router.get("/calendar{id}", tags=["calendar"], response_model=CalendarItem)
-async def get_calendar_item_by_id(id):
-    response = await read_one_calendar_item(id)
+@router.get("/calendar{title}", tags=["calendar"], response_model=CalendarItem)
+async def get_calendar_item_by_id(title):
+    response = await read_one_calendar_item(title)
     if response:
         return response
-    raise HTTPException(404, f"There is no Calendar Item with this id: {id}")
+    raise HTTPException(404, f"There is no Calendar Item with this title: {title}")
 
 # Read All ToDos
 @router.get("/calendar", tags=["calendar"])
@@ -36,17 +36,17 @@ async def get_calendar_item():
     return response
 
 # Update ToDo
-@router.put("/calendar/{id}", tags=["calendar"], response_model=CalendarItem)
-async def put_calendar_item(id:int, subject:str, category:str, starttime:str, endtime:str):
-    response = await update_calendar_item(id, subject, category, starttime, endtime)
+@router.put("/calendar/{title}", tags=["calendar"], response_model=CalendarItem)
+async def put_calendar_item(title:str, start:str, end:str, allDay:bool, resource:str):
+    response = await update_calendar_item(title, start, end, allDay, resource)
     if response:
         return response
-    raise HTTPException(404, f"There is no Calendar Item with this id: {id}")
+    raise HTTPException(404, f"There is no Calendar Item with this title: {title}")
 
 # Delete ToDo
-@router.delete("/calendar/{id}", tags=["calendar"])
-async def delete_calendar_item(id):
-    response = await remove_calendar_item(id)
+@router.delete("/calendar/{title}", tags=["calendar"])
+async def delete_calendar_item(title):
+    response = await remove_calendar_item(title)
     if response:
-        return "Successfully deleted ToDo"
-    raise HTTPException(404, f"There is no Calendar Item with this id: {id}")
+        return "Successfully deleted Calendar item"
+    raise HTTPException(404, f"There is no Calendar Item with this title: {title}")
