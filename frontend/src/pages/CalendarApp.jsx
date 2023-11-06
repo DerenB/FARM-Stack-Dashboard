@@ -4,6 +4,7 @@ import moment from 'moment';
 import axios from 'axios';
 import Select from 'react-select';
 import DateTimePicker from 'react-datetime-picker';
+import { BsFillArrowUpCircleFill, BsFillArrowDownCircleFill } from 'react-icons/bs';
 // Import Big Calendar and Moment
 
 import 'react-datetime-picker/dist/DateTimePicker.css';
@@ -14,16 +15,6 @@ import 'react-clock/dist/Clock.css';
 const localizer = momentLocalizer(moment);
 
 const CalendarApp = (props) => {
-
-    const [schoolChecked, setSchoolChecked] = useState(false);
-    const [workChecked, setWorkChecked] = useState(false);
-    const handleSchoolChange = () => {
-        setSchoolChecked(!schoolChecked);
-        
-    };
-    const handleWorkChange = () => {
-        setWorkChecked(!workChecked);
-    };
 
     const events = [
         {
@@ -97,47 +88,187 @@ const CalendarApp = (props) => {
         .then(res => console.log(res))
     };
 
+    // Toggle Form Entry
+    const [formOpen, setFormOpen] = useState(false)
+
+    // Handle Form Toggle
+    const handFormOpenToggle = () => {
+        setFormOpen(!formOpen);
+    }
+
+    // Checkbox Statuses
+    const [schoolChecked, setSchoolChecked] = useState(true);
+    const [workChecked, setWorkChecked] = useState(true);
+    const [homeChecked, setHomeChecked] = useState(true);
+    const [otherChecked, setOtherChecked] = useState(true);
+
+    // Handle Checkbox Changing
+    const handleSchoolChange = () => {
+        setSchoolChecked(!schoolChecked);
+    };
+    const handleWorkChange = () => {
+        setWorkChecked(!workChecked);
+    };
+    const handleHomeChange = () => {
+        setHomeChecked(!homeChecked);  
+    };
+    const handleOtherChange = () => {
+        setOtherChecked(!otherChecked);
+    };
+
     return (
-        <div>
+        <div className='w-full'>
             <div className='flex flex-col w-96 ml-10 mt-5 mb-5'>
-                <input type='text' placeholder='Title' className='mb-5 p-2 form-control outline' onChange={event => setTitle(event.target.value)} />
-                <div>Start Date Time:</div>
-                <DateTimePicker onChange={setStart} value={start} className='mb-5' />
-                <div>End Date Time:</div>
-                <DateTimePicker onChange={setEnd} value={end} className='mb-5' />
-                <label>
-                    All Day?:
-                    <Select options={allDayOptions} onChange={setAllDay} className='mb-5 p-2' />
-                </label>
-                <label>
-                    Category:
-                    <Select options={resourceOptions} onChange={setResource} className='mb-5 p-2' />
-                </label>
-                <button onClick={addEventHandler} className='btn outline'>Add Event</button>
+                {formOpen ? 
+                    <div>
+                        <BsFillArrowUpCircleFill onClick={handFormOpenToggle} className='mb-2 w-10 h-10' />
+                        <input type='text' placeholder='Title' className='mb-5 p-2 form-control outline' onChange={event => setTitle(event.target.value)} />
+                        <div>Start Date Time:</div>
+                        <DateTimePicker onChange={setStart} value={start} className='mb-5' />
+                        <div>End Date Time:</div>
+                        <DateTimePicker onChange={setEnd} value={end} className='mb-5' />
+                        <label>
+                            All Day?:
+                            <Select options={allDayOptions} onChange={setAllDay} className='mb-5 p-2' />
+                        </label>
+                        <label>
+                            Category:
+                            <Select options={resourceOptions} onChange={setResource} className='mb-5 p-2' />
+                        </label>
+                        <button onClick={addEventHandler} className='btn outline'>Add Event</button>
+                    </div>
+                    :
+                    <BsFillArrowDownCircleFill onClick={handFormOpenToggle} className='w-10 h-10' />
+                }
             </div>
 
-            {/* <div>
-                <p>Filter By Category</p>
-                <label>
-                    <input type='checkbox' checked={schoolChecked} onChange={handleSchoolChange} />School
-                </label>
-                <label>
-                    <input type='checkbox' checked={workChecked} onChange={handleWorkChange} />Work
-                </label>
-            </div> */}
+            <div className='flex md:flex-row flex-col ml-5 mr-5'>
+                <Calendar 
+                    localizer={localizer}
+                    events={appointments}
+                    titleAccessor='title'
+                    startAccessor="start"
+                    endAccessor="end"
+                    allDayAccessor="allDay"
+                    resourceAccessor='resource'
+                    defaultView='week'
+                    style={{ height: 900 }}
+                    className='md:w-9/12 w-full'
+                />
 
-            <Calendar 
-                localizer={localizer}
-                events={appointments}
-                titleAccessor='title'
-                startAccessor="start"
-                endAccessor="end"
-                allDayAccessor="allDay"
-                resourceAccessor='resource'
-                defaultView='week'
-                style={{ height: 900 }}
-            />
+                <div className='flex flex-col md:w-3/12 w-full bg-slate-500'>
+                    <div className='w-full text-center'>Events List</div>
+                    <div className='flex flex-row'>
+                        <div className='flex flex-col'>
+                            <label>
+                                <input type='checkbox' checked={schoolChecked} onChange={handleSchoolChange} />
+                                School
+                            </label>
+                            <label>
+                                <input type='checkbox' checked={workChecked} onChange={handleWorkChange} />
+                                Work
+                            </label>
+                        </div>
+                        <div className='flex flex-col'>
+                            <label>
+                                <input type='checkbox' checked={homeChecked} onChange={handleHomeChange} />
+                                Home
+                            </label>
+                            <label>
+                                <input type='checkbox' checked={otherChecked} onChange={handleOtherChange} />
+                                Other
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <div className='text-center'>
+                                School Items
+                            </div>
+                            {schoolChecked 
+                                ? 
+                                <div>
+                                    {dataList.map((listItem) => (
+                                        listItem.resource === "school" 
+                                        ?
+                                        <div key={listItem.title}>{listItem.title}</div> 
+                                        :
+                                        <div key={listItem.title}></div>
+                                    ))}
+                                </div> 
+                                : 
+                                <div className='text-center'>
+                                    ---
+                                </div>
+                            }
+                        </div>
+                        <div>
+                            <div className='text-center'>
+                                Work Items
+                            </div>
+                            {workChecked 
+                                ? 
+                                <div>
+                                    {dataList.map((listItem) => (
+                                        listItem.resource === "work" 
+                                        ?
+                                        <div key={listItem.title}>{listItem.title}</div> 
+                                        :
+                                        <div key={listItem.title}></div>
+                                    ))}
+                                </div> 
+                                : 
+                                <div className='text-center'>
+                                    ---
+                                </div>
+                            }    
+                        </div>
+                        <div>
+                            <div className='text-center'>
+                                Home Items
+                            </div>
+                            {homeChecked 
+                                ? 
+                                <div>
+                                    {dataList.map((listItem) => (
+                                        listItem.resource === "home" 
+                                        ?
+                                        <div key={listItem.title}>{listItem.title}</div> 
+                                        :
+                                        <div key={listItem.title}></div>
+                                    ))}
+                                </div> 
+                                : 
+                                <div className='text-center'>
+                                    ---
+                                </div>
+                            }    
+                        </div>
+                        <div>
+                            <div className='text-center'>
+                                Other Items
+                            </div>
+                            {otherChecked 
+                                ? 
+                                <div>
+                                    {dataList.map((listItem) => (
+                                        listItem.resource === "other" 
+                                        ?
+                                        <div key={listItem.title}>{listItem.title}</div> 
+                                        :
+                                        <div key={listItem.title}></div>
+                                    ))}
+                                </div> 
+                                : 
+                                <div className='text-center'>
+                                    ---
+                                </div>
+                            }    
+                        </div>
+                    </div>
+                </div>
 
+            </div>
             <div className='m-10'>
                 .
             </div>
